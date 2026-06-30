@@ -1,18 +1,23 @@
 import time
-import random
+import math
 
-def generate_sensor_hex():
-    decimal_reading = random.randint(0, 255)
-    hex_reading = hex(decimal_reading)[2:].upper().zfill(2)
+def generate_sine_hex(step):
+    # Create a smooth sine wave value between 0 and 255
+    # math.sin needs radians. We scale it so it stays positive
+    raw_value = int((math.sin(step * 0.5) + 1) * 127.5)
+    
+    # Convert to 8-bit Hex string
+    hex_reading = hex(raw_value)[2:].upper().zfill(2)
     return hex_reading
 
-print("Starting Data Stream... Press Ctrl+C to stop.")
+print("Starting Realistic Wave Data Stream...")
 
 with open("sensor_stream.txt", "w") as file:
-    for i in range(20):
-        data_point = generate_sensor_hex()
+    # Let's generate 40 data points this time to see the wave
+    for step in range(40):
+        data_point = generate_sine_hex(step)
         file.write(data_point + "\n")
-        print(f"Generated Hex Data: {data_point}")
-        time.sleep(0.5)
+        print(f"Step {step} | Generated Hex Wave Point: {data_point}")
+        time.sleep(0.2)
 
-print("Data successfully logged to sensor_stream.txt!")
+print("Wave data successfully logged to sensor_stream.txt!")
